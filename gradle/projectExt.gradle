@@ -1,0 +1,30 @@
+allprojects {
+    ext {
+
+        buildToolsVersion = "27.0.2"
+        compileSdkVersion = 27
+        targetSdkVersion = 27
+        minSdkVersion = 21
+
+        // Networking
+        retrofitVersion = '2.4.0'
+        okHttpVersion = '3.10.0'
+
+        // UI
+        constraintLayout = '1.0.2'
+        supportLibraryVersion = '27.1.0'
+
+        // Testing
+        testRunnerVersion = '1.0.1'
+        junitVersion = '4.12-beta-3'
+        mockitoVersion = '2.16.0'
+        espressoVersion = '3.0.1'
+
+        // Dependency injection
+        daggerVersion = '2.11'
+
+        rxAndroidVersion = '2.0.2'
+        recyclerViewVersion = '27.1.0'
+
+    }
+}

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TestTask</string>
+    <string name="search_in">Search in</string>
+    <string name="search_for">Search for</string>
+    <string name="search_threads">Search threads</string>
+    <string name="search_deep">Search deep</string>
+    <string name="search">Search</string>
+</resources>
