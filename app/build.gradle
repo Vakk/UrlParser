@@ -33,7 +33,12 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
+    implementation "com.arello-mobile:moxy:$moxyVersion"
+    implementation "com.arello-mobile:moxy-android:$moxyVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+
     testImplementation "junit:junit:$junitVersion"
+
 
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"

@@ -1,13 +1,13 @@
 package github.vakk.testtask.ui.common
 
-import com.arellomobile.mvp.MvpActivity
+import com.arellomobile.mvp.MvpFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 /**
- * Created by Valery Kotsulym on 3/16/18.
+ * Created by Valery Kotsulym on 3/18/18.
  */
-abstract class BaseActivity : MvpActivity() {
+class BaseFragment : MvpFragment() {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun addSubscription(disposable: Disposable) {
