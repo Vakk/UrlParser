@@ -7,8 +7,8 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by Valery Kotsulym on 3/16/18.
  */
-open class BaseRxPresenter : MvpPresenter<BaseView>() {
-    val compositeDisposable = CompositeDisposable()
+open class BaseRxPresenter<T : BaseView> : MvpPresenter<T>() {
+    private val compositeDisposable = CompositeDisposable()
 
     protected fun addSubscription(subscription: Disposable) {
         compositeDisposable.add(subscription)

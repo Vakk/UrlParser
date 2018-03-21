@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
     <EditText
@@ -34,18 +34,18 @@
         app:layout_constraintTop_toBottomOf="@+id/etSearchIn" />
 
     <EditText
-        android:id="@+id/search_threads"
+        android:id="@+id/etSearchThreads"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:hint="@string/search_threads"
-        app:layout_constraintEnd_toStartOf="@+id/search_deep"
+        app:layout_constraintEnd_toStartOf="@+id/etSearchDeep"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSearchFor" />
 
     <EditText
-        android:id="@+id/search_deep"
+        android:id="@+id/etSearchDeep"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -53,16 +53,29 @@
         android:hint="@string/search_deep"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/search_threads"
+        app:layout_constraintStart_toEndOf="@+id/etSearchThreads"
         app:layout_constraintTop_toBottomOf="@+id/etSearchFor" />
 
     <Button
+        android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
         android:hint="@string/search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_deep" />
+        app:layout_constraintTop_toBottomOf="@+id/etSearchDeep" />
+
+    <include
+        layout="@layout/fragment_search"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearch" />
 
 </android.support.constraint.ConstraintLayout>
