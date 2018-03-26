@@ -8,6 +8,7 @@ allprojects {
 
         // Networking
         retrofitVersion = '2.4.0'
+        retrofitRxAdapterVersion = '2.4.0'
         okHttpVersion = '3.10.0'
 
         // UI
@@ -18,7 +19,6 @@ allprojects {
         // Testing
         testRunnerVersion = '1.0.1'
         junitVersion = '4.12-beta-3'
-        mockitoVersion = '2.16.0'
         espressoVersion = '3.0.1'
 
         // Dependency injection

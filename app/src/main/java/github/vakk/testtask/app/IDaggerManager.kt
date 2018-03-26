@@ -13,4 +13,5 @@ interface IDaggerManager {
     fun searchComponent(): SearchComponent
 
     fun releaseSearchComponent()
+
 }

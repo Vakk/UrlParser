@@ -1,5 +1,6 @@
 package github.vakk.testtask.ui.main
 
+import github.vakk.testtask.model.manager.search.SearchResult
 import github.vakk.testtask.ui.common.BaseView
 
 /**
@@ -7,4 +8,8 @@ import github.vakk.testtask.ui.common.BaseView
  */
 interface MainView : BaseView {
     fun searchStarted()
+
+    fun searchFinished()
+
+    fun newResultAppeared(result: SearchResult)
 }

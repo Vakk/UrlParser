@@ -7,7 +7,7 @@ import github.vakk.testtask.ui.main.MainPresenter
  * Created by Valery Kotsulym on 3/18/18.
  */
 @Subcomponent(modules = [SearchModule::class])
-@SearchScope
+@Search
 interface SearchComponent {
     fun inject(presenter: MainPresenter)
 }

@@ -1,7 +1,9 @@
 package github.vakk.testtask.app
 
 import github.vakk.testtask.di.app.AppComponent
+import github.vakk.testtask.di.network.NetworkModule
 import github.vakk.testtask.di.search.SearchComponent
+import github.vakk.testtask.di.search.SearchModule
 
 /**
  * Created by Valery Kotsulym on 3/21/18.
@@ -10,7 +12,6 @@ class DaggerManager(val appComponent: AppComponent) : IDaggerManager {
 
     var searchComponent: SearchComponent? = null
 
-    @Synchronized
     override fun searchComponent(): SearchComponent = searchComponent ?: initSearchComponent()
 
     override fun releaseSearchComponent() {
@@ -18,7 +19,7 @@ class DaggerManager(val appComponent: AppComponent) : IDaggerManager {
     }
 
     private fun initSearchComponent(): SearchComponent {
-        val newComponent = appComponent.addSearchComponent()
+        val newComponent = appComponent.addSearchComponent(SearchModule())
         searchComponent = newComponent
         return newComponent
     }
