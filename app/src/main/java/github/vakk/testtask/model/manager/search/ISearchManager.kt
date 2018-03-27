@@ -1,13 +1,19 @@
 package github.vakk.testtask.model.manager.search
 
-import android.support.annotation.IntRange
+import github.vakk.testtask.model.manager.search.dto.SearchResultItem
 import io.reactivex.Observable
 
 /**
  * Created by Valery Kotsulym on 3/16/18.
  */
 interface ISearchManager {
-    fun setThreadsCount(@IntRange(from = 1) threadsCount: Int)
+    fun resultObservable(): Observable<SearchResultItem>
 
-    fun search(url: String, term: String, maxDeep: Int): Observable<SearchResult>
+    fun start(url: String, term: String, threadsCount: Int, maxDeep: Int)
+
+    fun pause()
+
+    fun stop()
+
+    fun isPaused(): Boolean
 }

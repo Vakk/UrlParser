@@ -1,6 +1,6 @@
 package github.vakk.testtask.ui.main
 
-import github.vakk.testtask.model.manager.search.SearchResult
+import github.vakk.testtask.model.manager.search.dto.SearchResultItem
 import github.vakk.testtask.ui.common.BaseView
 
 /**
@@ -11,5 +11,5 @@ interface MainView : BaseView {
 
     fun searchFinished()
 
-    fun newResultAppeared(result: SearchResult)
+    fun newResultAppeared(result: SearchResultItem)
 }
