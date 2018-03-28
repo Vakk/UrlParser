@@ -21,10 +21,20 @@ class MainActivity : BaseActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnSearch.setOnClickListener({
-            presenter.search(etSearchIn.text.toString(), etSearchFor.text.toString(), 5, 10)
+            presenter.search(etSearchIn.text.toString(), etSearchFor.text.toString(),
+                    etSearchThreads.text.toString().toIntOrNull() ?: 1,
+                    etSearchDeep.text.toString().toIntOrNull() ?: 1)
             btnSearch.isEnabled = false
         })
         initResultsList()
+        init()
+    }
+
+    private fun init() {
+        etSearchIn.setText("https://developer.android.com/studio/index.html")
+        etSearchFor.setText("Android")
+        etSearchThreads.setText("10")
+        etSearchDeep.setText("5")
     }
 
     private fun initResultsList() {

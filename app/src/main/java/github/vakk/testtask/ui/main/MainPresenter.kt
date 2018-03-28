@@ -23,19 +23,6 @@ class MainPresenter : BaseRxPresenter<MainView>() {
         App.instance.daggerManager.searchComponent().inject(this)
     }
 
-    override fun attachView(view: MainView?) {
-        super.attachView(view)
-        addSubscription(searchManager
-                .resultObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ item ->
-                    onSearchResultAppeared(item)
-                }, { throwable ->
-                    onSearchErrorHappened(throwable)
-                })
-        )
-    }
-
     private fun onSearchResultAppeared(item: SearchResultItem) {
         resultSet.add(item)
         viewState.newResultAppeared(item)
@@ -46,8 +33,15 @@ class MainPresenter : BaseRxPresenter<MainView>() {
     }
 
     fun search(url: String, query: String, threadsCount: Int, maxDeep: Int) {
-        searchManager.stop()
-        searchManager.start(url, query, threadsCount, maxDeep)
+        addSubscription(
+                searchManager.start(url, query, threadsCount, maxDeep)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ item ->
+                            onSearchResultAppeared(item)
+                        }, { throwable ->
+                            onSearchErrorHappened(throwable)
+                        })
+        )
     }
 
 }
