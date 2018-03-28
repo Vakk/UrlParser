@@ -4,6 +4,7 @@
     <string name="search_for">Search for</string>
     <string name="search_threads">Search threads</string>
     <string name="search_deep">Search deep</string>
-    <string name="search">Search</string>
     <string name="found_words">Found %d words</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
 </resources>

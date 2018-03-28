@@ -44,7 +44,7 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
         beginProcessObservable(url, term)
                 .subscribeWith(subject)
                 .take(1)
-                .flatMap { Observable.empty<SearchResultItem>() }
+                .flatMap { Observable.just("") }
 
         return subject
     }
