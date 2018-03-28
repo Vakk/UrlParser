@@ -1,5 +1,6 @@
 package github.vakk.testtask.model.executors
 
+import android.util.Log
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -17,6 +18,7 @@ class DownloadPageExecutor(threadsCount: Int) : Executor {
     override fun execute(command: Runnable) {
         tasks.offer(Runnable {
             try {
+                Log.d("executor ${javaClass.name}", "${Thread.currentThread().id}")
                 command.run()
             } finally {
                 scheduleNext()

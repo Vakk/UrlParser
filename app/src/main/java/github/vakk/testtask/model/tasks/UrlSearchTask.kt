@@ -1,9 +1,7 @@
 package github.vakk.testtask.model.tasks
 
-import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.Executor
 
 /**
@@ -12,30 +10,23 @@ import java.util.concurrent.Executor
 
 
 class UrlSearchTask(val executor: Executor) {
-    private val URL_PATTERN = "http[s]*\\S+[^\"\\[\'\\@]\\.html"
+    private val URL_PATTERN = "http[s]*[^\"<>\\['@]+"
 
     fun execute(source: String): Observable<String> {
-        val subject = PublishSubject.create<String>()
-
-        Observable.just("")
+        return Observable.just("")
                 .observeOn(Schedulers.from(executor))
-                .doOnNext {
+                .flatMap {
                     val regex = Regex(URL_PATTERN)
                     val pattern = regex.toPattern()
                     val matcher = pattern.matcher(source)
+                    val set: MutableSet<String> = HashSet()
                     while (matcher.find()) {
                         val url = matcher.group()
-                        subject.onNext(url)
+                        set.add(url)
                     }
+                    return@flatMap Observable.fromIterable(set)
                 }
-                .subscribeWith(subject)
-                .take(1)
 
-        return subject
-                .distinct()
-                .doOnNext {
-                    Log.d(javaClass.name, it)
-                }
     }
 
 }

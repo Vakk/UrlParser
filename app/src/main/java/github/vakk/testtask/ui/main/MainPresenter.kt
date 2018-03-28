@@ -6,6 +6,7 @@ import github.vakk.testtask.model.manager.search.ISearchManager
 import github.vakk.testtask.model.manager.search.dto.SearchResultItem
 import github.vakk.testtask.ui.common.BaseRxPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -23,9 +24,10 @@ class MainPresenter : BaseRxPresenter<MainView>() {
         App.instance.daggerManager.searchComponent().inject(this)
     }
 
-    private fun onSearchResultAppeared(item: SearchResultItem) {
-        resultSet.add(item)
-        viewState.newResultAppeared(item)
+    private fun onSearchResultAppeared(item: List<SearchResultItem>) {
+        resultSet.removeAll(item)
+        resultSet.addAll(item)
+        viewState.changeData(resultSet.toList())
     }
 
     private fun onSearchErrorHappened(throwable: Throwable) {
@@ -33,14 +35,14 @@ class MainPresenter : BaseRxPresenter<MainView>() {
     }
 
     fun search(url: String, query: String, threadsCount: Int, maxDeep: Int) {
-        addSubscription(
-                searchManager.start(url, query, threadsCount, maxDeep)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ item ->
-                            onSearchResultAppeared(item)
-                        }, { throwable ->
-                            onSearchErrorHappened(throwable)
-                        })
+        addSubscription(searchManager.start(url, query, threadsCount, maxDeep)
+                .buffer(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ items ->
+                    onSearchResultAppeared(items)
+                }, { throwable ->
+                    onSearchErrorHappened(throwable)
+                })
         )
     }
 

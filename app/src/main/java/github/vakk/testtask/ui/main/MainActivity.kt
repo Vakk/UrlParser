@@ -51,8 +51,8 @@ class MainActivity : BaseActivity(), MainView {
         btnSearch.isEnabled = true
     }
 
-    override fun newResultAppeared(result: SearchResultItem) {
-        resultsAdapter.addItem(result)
+    override fun changeData(result: List<SearchResultItem>) {
+        resultsAdapter.changeDataSet(result)
     }
 
 }

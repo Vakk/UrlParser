@@ -3,8 +3,10 @@ package github.vakk.testtask.ui.main
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import github.vakk.testtask.R
+import github.vakk.testtask.common.Type
 import github.vakk.testtask.model.manager.search.dto.SearchResultItem
 import github.vakk.testtask.ui.common.BaseAnimatedRecyclerAdapter
 import github.vakk.testtask.utils.extensions.layoutInflater
@@ -30,11 +32,60 @@ class ResultsAdapter : BaseAnimatedRecyclerAdapter<SearchResultItem, ResultsAdap
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val url: TextView = itemView.findViewById(R.id.tvUrl)
         private val totalFound: TextView = itemView.findViewById(R.id.tvTotal)
+        private val progressBar: ProgressBar = itemView.findViewById(R.id.pbProgress)
+
+        val UNKNOWN_PROGRESS = 0
+        val DOWNLOADING = 1
+        val PROCESSING = 2
+        val FOUND = 3
+        val NOT_FOUND = 3
+        val ERROR = 3
+        val MAX = 3
+
+        init {
+            progressBar.max = MAX
+        }
 
         fun bind(item: SearchResultItem) {
             url.text = item.urlName
-            totalFound.text = itemView.context.getString(R.string.found_words,
-                    item.searchStatus.wordsFound)
+            totalFound.text = itemView.context.getString(R.string.found_words, item.searchStatus.wordsFound)
+            bindStatus(item)
         }
+
+        private fun bindStatus(item: SearchResultItem) {
+            when (item.searchStatus.status) {
+                Type.ProcessStatus.NOT_FOUND -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = NOT_FOUND
+                    totalFound.text = "Not found..."
+                }
+                Type.ProcessStatus.DOWNLOADING -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = DOWNLOADING
+                    totalFound.text = "Downloading..."
+                }
+                Type.ProcessStatus.PROCESSING -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = PROCESSING
+                    totalFound.text = "Processing..."
+                }
+                Type.ProcessStatus.FOUND -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = FOUND
+                    totalFound.text = itemView.context.getString(R.string.found_words, item.searchStatus.wordsFound)
+                }
+                Type.ProcessStatus.ERROR -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = ERROR
+                    totalFound.text = "Error:${item.error?.message}"
+                }
+                Type.ProcessStatus.UNKNOWN -> {
+                    progressBar.isIndeterminate = true
+                    totalFound.text = "Waiting..."
+                }
+            }
+        }
+
+
     }
 }

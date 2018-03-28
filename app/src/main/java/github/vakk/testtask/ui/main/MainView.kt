@@ -11,5 +11,5 @@ interface MainView : BaseView {
 
     fun searchFinished()
 
-    fun newResultAppeared(result: SearchResultItem)
+    fun changeData(result: List<SearchResultItem>)
 }

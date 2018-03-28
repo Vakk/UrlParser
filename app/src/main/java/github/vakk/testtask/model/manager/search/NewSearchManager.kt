@@ -1,6 +1,5 @@
 package github.vakk.testtask.model.manager.search
 
-import android.util.Log
 import github.vakk.testtask.common.Type
 import github.vakk.testtask.model.executors.DownloadPageExecutor
 import github.vakk.testtask.model.executors.ProcessPageExecutor
@@ -47,9 +46,7 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
                 .take(1)
                 .flatMap { Observable.empty<SearchResultItem>() }
 
-        return subject.doOnNext {
-            Log.d(javaClass.name, it.toString())
-        }
+        return subject
     }
 
     private fun beginProcessObservable(url: String, query: String): Observable<SearchResultItem> {
@@ -73,7 +70,6 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
                     resultItem.searchStatus = SearchStatus(0, Type.ProcessStatus.PROCESSING)
                     subject.onNext(resultItem)
                 }).concatMap { searchObservable(it, query, resultItem, node) }
-                .map { resultItem }
                 .doOnNext {
                     if (it.searchStatus.wordsFound > 0) {
                         it.searchStatus.status = Type.ProcessStatus.FOUND
@@ -82,6 +78,8 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
                     }
                     subject.onNext(it)
                 }
+                .map { resultItem }
+
     }
 
     private fun searchObservable(body: String, query: String, resultItem: SearchResultItem, node: AtomicInteger)
@@ -101,8 +99,8 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
                 .doOnError {
                     resultItem.searchStatus.status = Type.ProcessStatus.ERROR
                     subject.onNext(resultItem)
-                }.switchMap({
-                    return@switchMap if (node.getAndIncrement() < maxNodes) {
+                }.flatMap({
+                    return@flatMap if (node.getAndIncrement() < maxNodes) {
                         processUrl(it, query, node)
                     } else {
                         Observable.just(resultItem)

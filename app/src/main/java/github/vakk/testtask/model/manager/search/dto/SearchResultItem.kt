@@ -9,4 +9,7 @@ data class SearchResultItem(
         var query: String,
         var searchStatus: SearchStatus,
         var error: Throwable? = null
-)
+) {
+    override fun equals(other: Any?) = other is SearchResultItem && id == other.id
+    override fun hashCode(): Int = id.hashCode()
+}
