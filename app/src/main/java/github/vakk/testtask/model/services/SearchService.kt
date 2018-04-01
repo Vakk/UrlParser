@@ -69,7 +69,8 @@ class SearchService : Service() {
     }
 
     fun stopSearch() {
-        searchStatus = SearchStatus(processStatus = Type.SearchStatus.STARTED)
+        searchManager.stop()
+        searchStatus = SearchStatus(processStatus = Type.SearchStatus.STOPPED)
         emmitUpdate()
     }
 

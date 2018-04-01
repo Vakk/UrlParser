@@ -12,6 +12,7 @@ import github.vakk.testtask.model.tasks.TermSearchTask
 import github.vakk.testtask.model.tasks.UrlSearchTask
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -20,12 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger
  * Created by Valery Kotsulym on 3/28/18.
  */
 class NewSearchManager(private val restService: RestService) : ISearchManager {
+    private var compositeDisposable = CompositeDisposable()
     override fun pause() {
 
     }
 
     override fun stop() {
-
+        compositeDisposable.dispose()
+        compositeDisposable = CompositeDisposable()
     }
 
     override fun isPaused(): Boolean = false
@@ -36,6 +39,7 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
     private var maxNodes = 1
 
     override fun start(url: String, query: String, downloadingThreadsCount: Int, nodesCount: Int): Observable<SearchStatus> {
+        stop()
         this.maxNodes = nodesCount
         initTasks(downloadingThreadsCount)
         val searchStatus = SearchStatus()
@@ -53,36 +57,37 @@ class NewSearchManager(private val restService: RestService) : ISearchManager {
         val searchResultItem = SearchResultItem(UUID.randomUUID().toString(), url, query, ItemSearchStatus(0, Type.ItemProcessStatus.DOWNLOADING))
         observer.onNext(searchResultItem)
 
-        loadPage(url)
-                .doOnNext {
-                    searchResultItem.searchStatus.status = Type.ItemProcessStatus.PROCESSING
-                    observer.onNext(searchResultItem)
-                }
-                .concatMap({ pageSource ->
-                    searchTermMatches(pageSource, query)
-                            .doOnNext({ matches -> searchResultItem.searchStatus.wordsFound = matches })
-                            .map { pageSource }
-                })
-                .concatMap({ pageSource ->
-                    searchUrl(pageSource)
-                            .takeWhile { nodes.incrementAndGet() < maxNodes }
-                            .doOnNext { pageUrl -> processPage(pageUrl, query, nodes, observer) } // do recursive call for another node.
-                })
-                .map { searchResultItem }
-                .onErrorReturn {
-                    searchResultItem.error = it
-                    searchResultItem.searchStatus.status = Type.ItemProcessStatus.ERROR
-                    searchResultItem
-                }
-                .doOnNext {
-                    it.searchStatus.status = when {
-                        it.searchStatus.status == Type.ItemProcessStatus.ERROR -> Type.ItemProcessStatus.ERROR
-                        it.searchStatus.wordsFound > 0 -> Type.ItemProcessStatus.FOUND
-                        else -> Type.ItemProcessStatus.NOT_FOUND
-                    }
-                }
-                .subscribe(observer::onNext)
-
+        compositeDisposable.add(
+                loadPage(url)
+                        .doOnNext {
+                            searchResultItem.searchStatus.status = Type.ItemProcessStatus.PROCESSING
+                            observer.onNext(searchResultItem)
+                        }
+                        .concatMap({ pageSource ->
+                            searchTermMatches(pageSource, query)
+                                    .doOnNext({ matches -> searchResultItem.searchStatus.wordsFound = matches })
+                                    .map { pageSource }
+                        })
+                        .concatMap({ pageSource ->
+                            searchUrl(pageSource)
+                                    .takeWhile { nodes.incrementAndGet() < maxNodes }
+                                    .doOnNext { pageUrl -> processPage(pageUrl, query, nodes, observer) } // do recursive call for another node.
+                        })
+                        .map { searchResultItem }
+                        .onErrorReturn {
+                            searchResultItem.error = it
+                            searchResultItem.searchStatus.status = Type.ItemProcessStatus.ERROR
+                            searchResultItem
+                        }
+                        .doOnNext {
+                            it.searchStatus.status = when {
+                                it.searchStatus.status == Type.ItemProcessStatus.ERROR -> Type.ItemProcessStatus.ERROR
+                                it.searchStatus.wordsFound > 0 -> Type.ItemProcessStatus.FOUND
+                                else -> Type.ItemProcessStatus.NOT_FOUND
+                            }
+                        }
+                        .subscribe(observer::onNext)
+        )
     }
 
     private fun loadPage(url: String): Observable<String> {
