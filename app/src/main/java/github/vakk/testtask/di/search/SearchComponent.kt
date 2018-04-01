@@ -1,6 +1,7 @@
 package github.vakk.testtask.di.search
 
 import dagger.Subcomponent
+import github.vakk.testtask.model.services.SearchService
 import github.vakk.testtask.ui.main.MainPresenter
 
 /**
@@ -10,4 +11,5 @@ import github.vakk.testtask.ui.main.MainPresenter
 @Search
 interface SearchComponent {
     fun inject(presenter: MainPresenter)
+    fun inject(service: SearchService)
 }

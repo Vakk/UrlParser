@@ -1,6 +1,6 @@
 package github.vakk.testtask.ui.main
 
-import github.vakk.testtask.model.manager.search.dto.SearchResultItem
+import github.vakk.testtask.model.dto.SearchResultItem
 import github.vakk.testtask.ui.common.BaseView
 
 /**

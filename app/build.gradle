@@ -35,13 +35,17 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitRxAdapterVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
     implementation "com.arello-mobile:moxy:$moxyVersion"
     implementation "com.arello-mobile:moxy-android:$moxyVersion"
     kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
 
+
     testImplementation "junit:junit:$junitVersion"
 
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
 }

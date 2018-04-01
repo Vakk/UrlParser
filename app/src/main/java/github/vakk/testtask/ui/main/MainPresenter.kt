@@ -2,13 +2,11 @@ package github.vakk.testtask.ui.main
 
 import com.arellomobile.mvp.InjectViewState
 import github.vakk.testtask.app.App
-import github.vakk.testtask.model.manager.search.ISearchManager
-import github.vakk.testtask.model.manager.search.dto.SearchResultItem
+import github.vakk.testtask.common.Type
+import github.vakk.testtask.model.dto.SearchStatus
+import github.vakk.testtask.model.services.SearchService
 import github.vakk.testtask.ui.common.BaseRxPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by Valery Kotsulym on 3/20/18.
@@ -16,63 +14,55 @@ import javax.inject.Inject
 @InjectViewState
 class MainPresenter : BaseRxPresenter<MainView>() {
 
-    private val resultSet: MutableSet<SearchResultItem> = hashSetOf()
-
-    @Inject
-    lateinit var searchManager: ISearchManager
-
-    var subscription: Disposable? = null
+    private var searchService: SearchService? = null
+    private var lastStatus: SearchStatus? = null
 
     init {
         App.instance.daggerManager.searchComponent().inject(this)
     }
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.searchFinished()
-    }
-
-    private fun onSearchResultAppeared(item: List<SearchResultItem>) {
-        resultSet.removeAll(item)
-        resultSet.addAll(item)
-        viewState.changeData(resultSet.toList())
-    }
-
-    private fun onSearchErrorHappened(throwable: Throwable) {
-        throwable.printStackTrace()
-        viewState.searchFinished()
-    }
-
-    fun search(url: String, query: String, threadsCount: Int, maxDeep: Int) {
-        if (searchStarted()) {
-            stop()
-        } else {
-            viewState.searchStarted()
-            subscription = searchManager.start(url, query, threadsCount, maxDeep)
-                    .buffer(1, TimeUnit.SECONDS)
+    fun connect(service: SearchService?) {
+        searchService = service
+        searchService?.let {
+            it.searchResultsObservable()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ items ->
-                        onSearchResultAppeared(items)
-                    }, { throwable ->
-                        onSearchErrorHappened(throwable)
-                    }, { viewState.searchFinished() })
-            subscription?.let {
-                addSubscription(it)
+                    .subscribe(
+                            { status -> onSearchNext(status) },
+                            { throwable -> onSearchError(throwable) }
+                    )
+        }
+    }
+
+    fun disconnect() {
+        searchService = null
+    }
+
+    private fun onSearchNext(searchStatus: SearchStatus) {
+        lastStatus = searchStatus
+        viewState.changeData(searchStatus.resultList)
+        when (searchStatus.processStatus) {
+            Type.SearchStatus.STARTED -> {
+                viewState.searchStarted()
+            }
+            else -> {
+                viewState.searchFinished()
             }
         }
     }
 
+    private fun onSearchError(throwable: Throwable) {
+        throwable.printStackTrace()
+    }
+
+    fun start(url: String, query: String, maxThreads: Int, maxNodes: Int) {
+        searchService?.startSearch(url, query, maxThreads, maxNodes)
+    }
+
     fun stop() {
-        clearData()
+        searchService?.stopSearch()
     }
 
-    fun clearData() {
-        resultSet.clear()
-        subscription?.dispose()
-        subscription = null
-        viewState.searchFinished()
-    }
+    fun searchStarted(): Boolean = lastStatus?.processStatus == Type.SearchStatus.STARTED
 
-    fun searchStarted(): Boolean = !(subscription?.isDisposed ?: true)
 
 }

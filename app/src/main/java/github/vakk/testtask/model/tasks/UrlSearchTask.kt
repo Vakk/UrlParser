@@ -13,7 +13,7 @@ class UrlSearchTask(val executor: Executor) {
     private val URL_PATTERN = "http[s]*[^\"<>\\['@]+"
 
     fun execute(source: String): Observable<String> {
-        return Observable.just("")
+        return Observable.just(source)
                 .observeOn(Schedulers.from(executor))
                 .flatMap {
                     val regex = Regex(URL_PATTERN)

@@ -7,7 +7,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import github.vakk.testtask.R
 import github.vakk.testtask.common.Type
-import github.vakk.testtask.model.manager.search.dto.SearchResultItem
+import github.vakk.testtask.model.dto.SearchResultItem
 import github.vakk.testtask.ui.common.BaseAnimatedRecyclerAdapter
 import github.vakk.testtask.utils.extensions.layoutInflater
 
@@ -54,32 +54,32 @@ class ResultsAdapter : BaseAnimatedRecyclerAdapter<SearchResultItem, ResultsAdap
 
         private fun bindStatus(item: SearchResultItem) {
             when (item.searchStatus.status) {
-                Type.ProcessStatus.NOT_FOUND -> {
+                Type.ItemProcessStatus.NOT_FOUND -> {
                     progressBar.isIndeterminate = false
                     progressBar.progress = NOT_FOUND
                     totalFound.text = "Not found..."
                 }
-                Type.ProcessStatus.DOWNLOADING -> {
+                Type.ItemProcessStatus.DOWNLOADING -> {
                     progressBar.isIndeterminate = false
                     progressBar.progress = DOWNLOADING
                     totalFound.text = "Downloading..."
                 }
-                Type.ProcessStatus.PROCESSING -> {
+                Type.ItemProcessStatus.PROCESSING -> {
                     progressBar.isIndeterminate = false
                     progressBar.progress = PROCESSING
                     totalFound.text = "Processing..."
                 }
-                Type.ProcessStatus.FOUND -> {
+                Type.ItemProcessStatus.FOUND -> {
                     progressBar.isIndeterminate = false
                     progressBar.progress = FOUND
                     totalFound.text = itemView.context.getString(R.string.found_words, item.searchStatus.wordsFound)
                 }
-                Type.ProcessStatus.ERROR -> {
+                Type.ItemProcessStatus.ERROR -> {
                     progressBar.isIndeterminate = false
                     progressBar.progress = ERROR
                     totalFound.text = "Error:${item.error?.message}"
                 }
-                Type.ProcessStatus.UNKNOWN -> {
+                Type.ItemProcessStatus.UNKNOWN -> {
                     progressBar.isIndeterminate = true
                     totalFound.text = "Waiting..."
                 }

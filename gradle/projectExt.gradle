@@ -29,5 +29,8 @@ allprojects {
 
         // Mvp
         moxyVersion = '1.5.3'
+
+        // Memory leak checker
+        leakCanaryVersion = '1.5.4'
     }
 }

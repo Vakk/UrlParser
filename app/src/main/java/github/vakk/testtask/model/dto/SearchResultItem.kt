@@ -1,4 +1,4 @@
-package github.vakk.testtask.model.manager.search.dto
+package github.vakk.testtask.model.dto
 
 /**
  * Created by Valery Kotsulym on 3/18/18.
@@ -7,7 +7,7 @@ data class SearchResultItem(
         var id: String,
         var urlName: String,
         var query: String,
-        var searchStatus: SearchStatus,
+        var searchStatus: ItemSearchStatus,
         var error: Throwable? = null
 ) {
     override fun equals(other: Any?) = other is SearchResultItem && id == other.id

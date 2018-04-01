@@ -1,10 +1,10 @@
-package github.vakk.testtask.model.manager.search.dto
+package github.vakk.testtask.model.dto
 
 import github.vakk.testtask.common.Type
 
 /**
  * Created by Valery Kotsulym on 3/18/18.
  */
-data class SearchStatus(
+data class ItemSearchStatus(
         var wordsFound: Int,
-        var status: Type.ProcessStatus)
+        var status: Type.ItemProcessStatus)

@@ -1,6 +1,7 @@
 package github.vakk.testtask.app
 
 import android.app.Application
+import com.squareup.leakcanary.LeakCanary
 import github.vakk.testtask.di.app.AppModule
 import github.vakk.testtask.di.app.DaggerAppComponent
 
@@ -13,6 +14,10 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this)
         instance = this
         initAppComponent()
     }

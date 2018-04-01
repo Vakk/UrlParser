@@ -1,4 +1,4 @@
-package github.vakk.testtask.model.manager.search.dto
+package github.vakk.testtask.model.dto
 
 /**
  * Created by Valery Kotsulym on 3/27/18.
